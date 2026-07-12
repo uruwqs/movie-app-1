@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { MovieList } from "@/components/MovieList.tsx";
+import { MovieSearch } from "@/components/MovieSearch.tsx";
 import { movies } from "@/data/movies.ts";
 
 function App() {
+  const [search, setSearch] = useState("");
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(search.toLowerCase()),
+  );
+
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-10 text-white">
       <section className="mx-auto max-w-5xl">
@@ -14,7 +22,8 @@ function App() {
           and mock API data.
         </p>
 
-        <MovieList movies={movies} />
+        <MovieSearch value={search} onChange={setSearch} />
+        <MovieList movies={filteredMovies} />
       </section>
     </main>
   );

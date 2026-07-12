@@ -23,7 +23,7 @@ export function EmptyState({
   }[variant];
 
   return (
-    <div className="mt-8 rounded-lg border border-dashed border-slate-700 bg-slate-900 p-8 text-center">
+    <div className="mt-9 rounded-2xl border border-dashed border-slate-700 bg-slate-900/70 p-10 text-center">
       <h2 className="text-2xl font-bold">{content.title}</h2>
       <p className="mx-auto mt-3 max-w-md text-slate-300">{content.description}</p>
       {variant !== "catalog" && (

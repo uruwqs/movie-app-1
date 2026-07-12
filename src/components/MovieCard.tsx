@@ -15,15 +15,15 @@ export function MovieCard({
     movie;
 
   return (
-    <article className="overflow-hidden rounded-lg bg-white text-slate-950 shadow-lg">
+    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-50 text-slate-950 shadow-xl shadow-black/20 transition duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30">
       <img
-        className="aspect-2/3 w-full object-cover"
+        className="aspect-2/3 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
         src={poster_url}
         alt={title}
       />
-      <div className="space-y-2 p-5">
+      <div className="space-y-3 p-5">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-2xl font-bold">{title}</h2>
+          <h2 className="text-xl font-bold tracking-tight">{title}</h2>
           <button
             className={`rounded-full border px-3 py-1 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 ${
               isFavorite
@@ -39,8 +39,8 @@ export function MovieCard({
         <p className="text-sm text-slate-600">
           {genre} • {release_year}
         </p>
-        <p className="text-sm text-slate-700">{description}</p>
-        <p className="font-semibold text-sky-700">Rating: {rating}</p>
+        <p className="text-sm leading-6 text-slate-700">{description}</p>
+        <p className="text-sm font-bold text-sky-700">★ {rating}</p>
       </div>
     </article>
   );

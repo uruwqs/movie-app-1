@@ -78,32 +78,36 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-10 text-white">
+    <main className="min-h-screen bg-slate-950 px-5 py-12 text-white sm:px-6 sm:py-16">
       <section className="mx-auto max-w-5xl">
-        <p className="text-sm font-semibold uppercase text-sky-300">
+        <p className="text-xs font-bold tracking-[0.2em] text-sky-300 uppercase">
           Movies App
         </p>
-        <h1 className="mt-3 text-4xl font-bold">Find your next movie</h1>
-        <p className="mt-4 max-w-2xl text-slate-300">
+        <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+          Find your next movie
+        </h1>
+        <p className="mt-4 max-w-2xl leading-7 text-slate-300">
           A small React project for learning components, props, lists, state,
           and mock API data.
         </p>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_220px_220px]">
-          <MovieSearch value={search} onChange={setSearch} />
-          <MovieGenreFilter
-            genres={genres}
-            value={selectedGenre}
-            onChange={setSelectedGenre}
-          />
-          <MovieSort value={sortBy} onChange={setSortBy} />
-        </div>
+        <div className="mt-10 rounded-2xl border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/20 backdrop-blur sm:p-5">
+          <div className="grid gap-4 lg:grid-cols-[1fr_220px_220px]">
+            <MovieSearch value={search} onChange={setSearch} />
+            <MovieGenreFilter
+              genres={genres}
+              value={selectedGenre}
+              onChange={setSelectedGenre}
+            />
+            <MovieSort value={sortBy} onChange={setSortBy} />
+          </div>
 
-        <MovieFavoritesFilter
-          favoriteCount={favoriteIds.length}
-          value={favoritesOnly}
-          onChange={setFavoritesOnly}
-        />
+          <MovieFavoritesFilter
+            favoriteCount={favoriteIds.length}
+            value={favoritesOnly}
+            onChange={setFavoritesOnly}
+          />
+        </div>
 
         {isLoading ? (
           <p
@@ -114,7 +118,7 @@ function App() {
           </p>
         ) : sortedMovies.length > 0 ? (
           <>
-            <p className="mt-8 text-sm font-semibold text-slate-300">
+            <p className="mt-9 text-sm font-medium text-slate-400">
               Showing {movieCountText}
             </p>
             <MovieList

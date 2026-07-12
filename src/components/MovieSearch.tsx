@@ -13,7 +13,7 @@ export function MovieSearch({ value, onChange }: MovieSearchProps) {
         Search
       </label>
       <input
-        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-400 outline-none focus:border-sky-400"
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white placeholder:text-slate-400 focus:border-sky-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
         id="movie-search"
         type="text"
         placeholder="Search by movie title"

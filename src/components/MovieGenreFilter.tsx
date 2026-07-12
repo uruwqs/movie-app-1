@@ -18,7 +18,7 @@ export function MovieGenreFilter({
         Genre
       </label>
       <select
-        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-sky-400"
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white focus:border-sky-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
         id="movie-genre"
         value={value}
         onChange={(event) => onChange(event.target.value)}

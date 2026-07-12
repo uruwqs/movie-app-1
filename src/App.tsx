@@ -26,10 +26,9 @@ function App() {
     [movieList],
   );
 
+  const normalizedSearch = search.trim().toLowerCase();
   const filteredMovies = movieList.filter((movie) => {
-    const matchesSearch = movie.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch = movie.title.toLowerCase().includes(normalizedSearch);
 
     const matchesGenre =
       selectedGenre === allGenres || movie.genre === selectedGenre;
@@ -39,6 +38,8 @@ function App() {
 
   const movieCountText =
     filteredMovies.length === 1 ? "1 movie" : `${filteredMovies.length} movies`;
+  const hasActiveFilters =
+    normalizedSearch.length > 0 || selectedGenre !== allGenres;
 
   function clearFilters() {
     setSearch("");
@@ -81,7 +82,10 @@ function App() {
             <MovieList movies={filteredMovies} />
           </>
         ) : (
-          <EmptyState onClearFilters={clearFilters} />
+          <EmptyState
+            hasActiveFilters={hasActiveFilters}
+            onClearFilters={clearFilters}
+          />
         )}
       </section>
     </main>

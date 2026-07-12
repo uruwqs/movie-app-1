@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/EmptyState.tsx";
 import { MovieList } from "@/components/MovieList.tsx";
 import { MovieSearch } from "@/components/MovieSearch.tsx";
 import { MovieGenreFilter } from "@/components/MovieGenreFilter.tsx";
+import { MovieFavoritesFilter } from "@/components/MovieFavoritesFilter.tsx";
 import { MovieSort, type MovieSortValue } from "@/components/MovieSort.tsx";
 import { type Movie } from "@/data/movies.ts";
 
@@ -15,6 +16,8 @@ function App() {
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(allGenres);
   const [sortBy, setSortBy] = useState<MovieSortValue>("default");
+  const [favoriteIds, setFavoriteIds] = useState<Movie["id"][]>([]);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
 
   useEffect(() => {
     getMovies().then((moviesFromApi) => {
@@ -34,8 +37,9 @@ function App() {
 
     const matchesGenre =
       selectedGenre === allGenres || movie.genre === selectedGenre;
+    const matchesFavorite = !favoritesOnly || favoriteIds.includes(movie.id);
 
-    return matchesSearch && matchesGenre;
+    return matchesSearch && matchesGenre && matchesFavorite;
   });
 
   const sortedMovies = [...filteredMovies].sort((firstMovie, secondMovie) => {
@@ -52,12 +56,25 @@ function App() {
 
   const movieCountText =
     sortedMovies.length === 1 ? "1 movie" : `${sortedMovies.length} movies`;
-  const hasActiveFilters =
-    normalizedSearch.length > 0 || selectedGenre !== allGenres;
+  const emptyStateVariant =
+    movieList.length === 0
+      ? "catalog"
+      : favoritesOnly && favoriteIds.length === 0
+        ? "favorites"
+        : "filters";
 
   function clearFilters() {
     setSearch("");
     setSelectedGenre(allGenres);
+    setFavoritesOnly(false);
+  }
+
+  function toggleFavorite(movieId: Movie["id"]) {
+    setFavoriteIds((currentIds) =>
+      currentIds.includes(movieId)
+        ? currentIds.filter((id) => id !== movieId)
+        : [...currentIds, movieId],
+    );
   }
 
   return (
@@ -82,6 +99,12 @@ function App() {
           <MovieSort value={sortBy} onChange={setSortBy} />
         </div>
 
+        <MovieFavoritesFilter
+          favoriteCount={favoriteIds.length}
+          value={favoritesOnly}
+          onChange={setFavoritesOnly}
+        />
+
         {isLoading ? (
           <p
             className="mt-8 rounded-lg bg-slate-900 p-6 text-center text-slate-300"
@@ -94,11 +117,15 @@ function App() {
             <p className="mt-8 text-sm font-semibold text-slate-300">
               Showing {movieCountText}
             </p>
-            <MovieList movies={sortedMovies} />
+            <MovieList
+              movies={sortedMovies}
+              favoriteIds={favoriteIds}
+              onToggleFavorite={toggleFavorite}
+            />
           </>
         ) : (
           <EmptyState
-            hasActiveFilters={hasActiveFilters}
+            variant={emptyStateVariant}
             onClearFilters={clearFilters}
           />
         )}

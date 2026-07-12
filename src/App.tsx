@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/EmptyState.tsx";
 import { MovieList } from "@/components/MovieList.tsx";
 import { MovieSearch } from "@/components/MovieSearch.tsx";
 import { MovieGenreFilter } from "@/components/MovieGenreFilter.tsx";
+import { MovieSort, type MovieSortValue } from "@/components/MovieSort.tsx";
 import { type Movie } from "@/data/movies.ts";
 
 const allGenres = "All";
@@ -13,6 +14,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(allGenres);
+  const [sortBy, setSortBy] = useState<MovieSortValue>("default");
 
   useEffect(() => {
     getMovies().then((moviesFromApi) => {
@@ -36,8 +38,20 @@ function App() {
     return matchesSearch && matchesGenre;
   });
 
+  const sortedMovies = [...filteredMovies].sort((firstMovie, secondMovie) => {
+    if (sortBy === "rating") {
+      return secondMovie.rating - firstMovie.rating;
+    }
+
+    if (sortBy === "releaseYear") {
+      return secondMovie.release_year - firstMovie.release_year;
+    }
+
+    return 0;
+  });
+
   const movieCountText =
-    filteredMovies.length === 1 ? "1 movie" : `${filteredMovies.length} movies`;
+    sortedMovies.length === 1 ? "1 movie" : `${sortedMovies.length} movies`;
   const hasActiveFilters =
     normalizedSearch.length > 0 || selectedGenre !== allGenres;
 
@@ -58,13 +72,14 @@ function App() {
           and mock API data.
         </p>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-[1fr_220px]">
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_220px_220px]">
           <MovieSearch value={search} onChange={setSearch} />
           <MovieGenreFilter
             genres={genres}
             value={selectedGenre}
             onChange={setSelectedGenre}
           />
+          <MovieSort value={sortBy} onChange={setSortBy} />
         </div>
 
         {isLoading ? (
@@ -74,12 +89,12 @@ function App() {
           >
             Loading movies...
           </p>
-        ) : filteredMovies.length > 0 ? (
+        ) : sortedMovies.length > 0 ? (
           <>
             <p className="mt-8 text-sm font-semibold text-slate-300">
               Showing {movieCountText}
             </p>
-            <MovieList movies={filteredMovies} />
+            <MovieList movies={sortedMovies} />
           </>
         ) : (
           <EmptyState

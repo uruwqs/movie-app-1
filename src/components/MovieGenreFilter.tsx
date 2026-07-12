@@ -10,17 +10,25 @@ export function MovieGenreFilter({
   onChange,
 }: MovieGenreFilterProps) {
   return (
-    <select
-      aria-label="Filter movies by genre"
-      className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white"
-      value={value}
-      onChange={(event) => onChange(event.target.value)}
-    >
-      {genres.map((genre) => (
-        <option key={genre} value={genre}>
-          {genre}
-        </option>
-      ))}
-    </select>
+    <div>
+      <label
+        className="mb-2 block text-sm font-medium text-slate-300"
+        htmlFor="movie-genre"
+      >
+        Genre
+      </label>
+      <select
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-sky-400"
+        id="movie-genre"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      >
+        {genres.map((genre) => (
+          <option key={genre} value={genre}>
+            {genre}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }

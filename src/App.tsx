@@ -1,17 +1,30 @@
-function MovieCard() {
+type MovieCardProps = {
+  title: string;
+  genre: string;
+  release_year: number;
+  description: string;
+  rating: number;
+};
+
+function MovieCard({
+  title,
+  genre,
+  release_year,
+  description,
+  rating,
+}: MovieCardProps) {
   return (
     <article className="overflow-hidden rounded-lg bg-white text-slate-950 shadow-lg">
       <div className="flex aspect-2/3 items-center justify-center bg-sky-200 px-6 text-center text-2xl font-bold text-sky-950">
-        Starlight Summer
+        {title}
       </div>
       <div className="space-y-2 p-5">
-        <h2 className="text-2xl font-bold">Starlight Summer</h2>
-        <p className="text-sm text-slate-600">Adventure • 2025</p>
-        <p className="text-sm text-slate-700">
-          A group of friends discover a glowing map that leads to a summer they
-          will never forget.
+        <h2 className="text-2xl font-bold">{title}</h2>
+        <p className="text-sm text-slate-600">
+          {genre} • {release_year}
         </p>
-        <p className="font-semibold text-sky-700">Rating: 8.7</p>
+        <p className="text-sm text-slate-700">{description}</p>
+        <p className="font-semibold text-sky-700">Rating: {rating}</p>
       </div>
     </article>
   );
@@ -31,7 +44,13 @@ function App() {
         </p>
 
         <div className="mt-8 max-w-sm">
-          <MovieCard />
+          <MovieCard
+            title="Starlight Summer"
+            release_year={2025}
+            genre="Adventure"
+            rating={8.7}
+            description="A group of friends discover a glowing map that leads to a summer they will never forget."
+          />
         </div>
       </section>
     </main>

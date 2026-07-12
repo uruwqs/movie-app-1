@@ -1,14 +1,26 @@
 import { useState } from "react";
 import { MovieList } from "@/components/MovieList.tsx";
 import { MovieSearch } from "@/components/MovieSearch.tsx";
+import { MovieGenreFilter } from "@/components/MovieGenreFilter.tsx";
 import { movies } from "@/data/movies.ts";
+
+const allGenres = "All";
+const genres = [allGenres, ...new Set(movies.map((movie) => movie.genre))];
 
 function App() {
   const [search, setSearch] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState(allGenres);
 
-  const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredMovies = movies.filter((movie) => {
+    const matchesSearch = movie.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesGenre =
+      selectedGenre === allGenres || movie.genre === selectedGenre;
+
+    return matchesSearch && matchesGenre;
+  });
 
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-10 text-white">
@@ -22,7 +34,15 @@ function App() {
           and mock API data.
         </p>
 
-        <MovieSearch value={search} onChange={setSearch} />
+        <div className="mt-8 grid gap-4 sm:grid-cols-[1fr_220px]">
+          <MovieSearch value={search} onChange={setSearch} />
+          <MovieGenreFilter
+            genres={genres}
+            value={selectedGenre}
+            onChange={setSelectedGenre}
+          />
+        </div>
+
         <MovieList movies={filteredMovies} />
       </section>
     </main>

@@ -1,10 +1,10 @@
+import { type MovieSortValue } from "@/types/movie.ts";
+
 const movieSortOptions = [
   { value: "default", label: "Default" },
   { value: "rating", label: "Highest rated" },
   { value: "releaseYear", label: "Newest first" },
 ] as const;
-
-export type MovieSortValue = (typeof movieSortOptions)[number]["value"];
 
 type MovieSortProps = {
   value: MovieSortValue;

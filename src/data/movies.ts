@@ -1,12 +1,4 @@
-export type Movie = {
-  id: number;
-  title: string;
-  poster_url: string;
-  genre: string;
-  release_year: number;
-  description: string;
-  rating: number;
-};
+import { type Movie } from "@/types/movie.ts";
 
 export const movies: Movie[] = [
   {

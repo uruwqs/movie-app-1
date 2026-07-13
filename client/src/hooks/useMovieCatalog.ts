@@ -7,6 +7,7 @@ const allGenres = "All";
 export function useMovieCatalog() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(allGenres);
   const [sortBy, setSortBy] = useState<MovieSortValue>("default");
@@ -14,10 +15,16 @@ export function useMovieCatalog() {
   const [favoritesOnly, setFavoritesOnly] = useState(false);
 
   useEffect(() => {
-    getMovies().then((moviesFromApi) => {
-      setMovies(moviesFromApi);
-      setIsLoading(false);
-    });
+    getMovies()
+      .then((moviesFromApi) => {
+        setMovies(moviesFromApi);
+      })
+      .catch(() => {
+        setErrorMessage("Could not load movies. Please try again later.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const genres = useMemo(
@@ -66,6 +73,7 @@ export function useMovieCatalog() {
     visibleMovies,
     genres,
     isLoading,
+    errorMessage,
     search,
     setSearch,
     selectedGenre,

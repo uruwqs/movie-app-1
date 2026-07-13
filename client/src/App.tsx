@@ -59,6 +59,13 @@ function App() {
           >
             Loading movies...
           </p>
+        ) : catalog.errorMessage ? (
+          <p
+            className="mt-8 rounded-lg border border-red-400/30 bg-red-400/10 p-6 text-center text-red-200"
+            role="alert"
+          >
+            {catalog.errorMessage}
+          </p>
         ) : catalog.visibleMovies.length > 0 ? (
           <>
             <p className="mt-9 text-sm font-medium text-slate-400">

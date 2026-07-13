@@ -60,3 +60,12 @@ def update_movie(movie_id: int, movie_data: MovieCreate):
     )
     movies[movie_index] = updated_movie
     return updated_movie
+
+
+@app.delete(
+    "/api/movies/{movie_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_movie(movie_id: int) -> None:
+    movie_index = find_movie_index(movie_id)
+    movies.pop(movie_index)

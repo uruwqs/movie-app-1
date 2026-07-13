@@ -4,6 +4,7 @@ import { type Movie } from "@/types/movie.ts";
 type MovieListProps = {
   movies: readonly Movie[];
   favoriteIds: readonly Movie["id"][];
+  deletingMovieId: Movie["id"] | null;
   onToggleFavorite: (movieId: Movie["id"]) => void;
   onEdit: (movie: Movie) => void;
   onDelete: (movie: Movie) => void;
@@ -12,6 +13,7 @@ type MovieListProps = {
 export function MovieList({
   movies,
   favoriteIds,
+  deletingMovieId,
   onToggleFavorite,
   onEdit,
   onDelete,
@@ -23,6 +25,7 @@ export function MovieList({
           key={movie.id}
           movie={movie}
           isFavorite={favoriteIds.includes(movie.id)}
+          isDeleting={deletingMovieId === movie.id}
           onToggleFavorite={onToggleFavorite}
           onEdit={onEdit}
           onDelete={onDelete}

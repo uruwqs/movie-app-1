@@ -13,14 +13,18 @@ function App() {
   const catalog = useMovieCatalog();
   const [movieToEdit, setMovieToEdit] = useState<Movie | null>(null);
 
-  async function handleMovieSubmit(movieInput: MovieInput) {
+  async function handleMovieSubmit(movieInput: MovieInput): Promise<boolean> {
+    let wasSaved: boolean;
     if (movieToEdit) {
-      await catalog.editMovie(movieToEdit.id, movieInput);
+      wasSaved = await catalog.editMovie(movieToEdit.id, movieInput);
     } else {
-      await catalog.addMovie(movieInput);
+      wasSaved = await catalog.addMovie(movieInput);
     }
 
-    setMovieToEdit(null);
+    if (wasSaved) {
+      setMovieToEdit(null);
+    }
+    return wasSaved;
   }
 
   async function handleMovieDelete(movie: Movie) {
@@ -29,8 +33,8 @@ function App() {
       return;
     }
 
-    await catalog.removeMovie(movie.id);
-    if (movieToEdit?.id === movie.id) {
+    const wasDeleted = await catalog.removeMovie(movie.id);
+    if (wasDeleted && movieToEdit?.id === movie.id) {
       setMovieToEdit(null);
     }
   }
@@ -62,6 +66,8 @@ function App() {
 
         <MovieForm
           movieToEdit={movieToEdit}
+          isSaving={catalog.isSaving}
+          errorMessage={catalog.mutationError}
           onSubmit={handleMovieSubmit}
           onCancel={() => setMovieToEdit(null)}
         />
@@ -106,6 +112,7 @@ function App() {
             <MovieList
               movies={catalog.visibleMovies}
               favoriteIds={catalog.favoriteIds}
+              deletingMovieId={catalog.deletingMovieId}
               onToggleFavorite={catalog.toggleFavorite}
               onEdit={setMovieToEdit}
               onDelete={handleMovieDelete}

@@ -3,6 +3,7 @@ import { type Movie } from "@/types/movie.ts";
 type MovieCardProps = {
   movie: Movie;
   isFavorite: boolean;
+  isDeleting: boolean;
   onToggleFavorite: (movieId: Movie["id"]) => void;
   onEdit: (movie: Movie) => void;
   onDelete: (movie: Movie) => void;
@@ -11,6 +12,7 @@ type MovieCardProps = {
 export function MovieCard({
   movie,
   isFavorite,
+  isDeleting,
   onToggleFavorite,
   onEdit,
   onDelete,
@@ -35,6 +37,7 @@ export function MovieCard({
                 : "border-slate-300 text-slate-700 hover:border-sky-700 hover:text-sky-700"
             }`}
             type="button"
+            disabled={isDeleting}
             onClick={() => onToggleFavorite(id)}
           >
             {isFavorite ? "Saved" : "Save"}
@@ -50,16 +53,18 @@ export function MovieCard({
             <button
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:border-sky-700 hover:text-sky-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
               type="button"
+              disabled={isDeleting}
               onClick={() => onEdit(movie)}
             >
               Edit
             </button>
             <button
-              className="rounded-lg border border-red-300 px-3 py-2 text-sm font-semibold text-red-700 hover:border-red-700 hover:text-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+              className="rounded-lg border border-red-300 px-3 py-2 text-sm font-semibold text-red-700 hover:border-red-700 hover:text-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               type="button"
+              disabled={isDeleting}
               onClick={() => onDelete(movie)}
             >
-              Delete
+              {isDeleting ? "Deleting..." : "Delete"}
             </button>
           </div>
         </div>

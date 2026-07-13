@@ -11,12 +11,16 @@ const emptyMovie: MovieInput = {
 
 type MovieFormProps = {
   movieToEdit: Movie | null;
-  onSubmit: (movie: MovieInput) => Promise<void>;
+  isSaving: boolean;
+  errorMessage: string | null;
+  onSubmit: (movie: MovieInput) => Promise<boolean>;
   onCancel: () => void;
 };
 
 export function MovieForm({
   movieToEdit,
+  isSaving,
+  errorMessage,
   onSubmit,
   onCancel,
 }: MovieFormProps) {
@@ -38,8 +42,10 @@ export function MovieForm({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    await onSubmit(movie);
-    setMovie(emptyMovie);
+    const wasSaved = await onSubmit(movie);
+    if (wasSaved) {
+      setMovie(emptyMovie);
+    }
   }
 
   return (
@@ -56,6 +62,15 @@ export function MovieForm({
           : "New movies use the default poster until image uploads are added later."}
       </p>
 
+      {errorMessage && (
+        <p
+          className="mt-4 rounded-lg border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-200"
+          role="alert"
+        >
+          {errorMessage}
+        </p>
+      )}
+
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <label className="grid gap-2 text-sm font-semibold">
           Title
@@ -66,6 +81,7 @@ export function MovieForm({
             minLength={1}
             maxLength={100}
             required
+            disabled={isSaving}
             onChange={(event) =>
               setMovie({ ...movie, title: event.currentTarget.value })
             }
@@ -81,6 +97,7 @@ export function MovieForm({
             minLength={1}
             maxLength={50}
             required
+            disabled={isSaving}
             onChange={(event) =>
               setMovie({ ...movie, genre: event.currentTarget.value })
             }
@@ -95,6 +112,7 @@ export function MovieForm({
             value={movie.release_year}
             min={1}
             required
+            disabled={isSaving}
             onChange={(event) =>
               setMovie({
                 ...movie,
@@ -114,6 +132,7 @@ export function MovieForm({
             max={10}
             step={0.1}
             required
+            disabled={isSaving}
             onChange={(event) =>
               setMovie({ ...movie, rating: Number(event.currentTarget.value) })
             }
@@ -128,6 +147,7 @@ export function MovieForm({
             minLength={1}
             maxLength={500}
             required
+            disabled={isSaving}
             onChange={(event) =>
               setMovie({ ...movie, description: event.currentTarget.value })
             }
@@ -137,15 +157,21 @@ export function MovieForm({
 
       <div className="mt-6 flex flex-wrap gap-3">
         <button
-          className="rounded-lg bg-sky-400 px-5 py-3 font-semibold text-slate-950 hover:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
+          className="rounded-lg bg-sky-400 px-5 py-3 font-semibold text-slate-950 hover:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 disabled:cursor-not-allowed disabled:opacity-60"
           type="submit"
+          disabled={isSaving}
         >
-          {movieToEdit ? "Save changes" : "Add movie"}
+          {isSaving
+            ? "Saving..."
+            : movieToEdit
+              ? "Save changes"
+              : "Add movie"}
         </button>
         {movieToEdit && (
           <button
             className="rounded-lg border border-slate-600 px-5 py-3 font-semibold text-slate-200 hover:border-slate-400 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
             type="button"
+            disabled={isSaving}
             onClick={onCancel}
           >
             Cancel

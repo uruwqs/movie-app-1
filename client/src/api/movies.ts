@@ -17,6 +17,10 @@ export async function createMovie(movie: MovieInput): Promise<Movie> {
     body: JSON.stringify(movie),
   });
 
+  if (!response.ok) {
+    throw new Error("Failed to create movie");
+  }
+
   return response.json();
 }
 
@@ -30,9 +34,17 @@ export async function updateMovie(
     body: JSON.stringify(movie),
   });
 
+  if (!response.ok) {
+    throw new Error("Failed to update movie");
+  }
+
   return response.json();
 }
 
 export async function deleteMovie(movieId: Movie["id"]): Promise<void> {
-  await fetch(`/api/movies/${movieId}`, { method: "DELETE" });
+  const response = await fetch(`/api/movies/${movieId}`, { method: "DELETE" });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete movie");
+  }
 }

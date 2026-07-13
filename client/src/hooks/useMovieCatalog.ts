@@ -17,6 +17,11 @@ export function useMovieCatalog() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [mutationError, setMutationError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [deletingMovieId, setDeletingMovieId] = useState<Movie["id"] | null>(
+    null,
+  );
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(allGenres);
   const [sortBy, setSortBy] = useState<MovieSortValue>("default");
@@ -77,28 +82,64 @@ export function useMovieCatalog() {
     );
   }
 
-  async function addMovie(movieInput: MovieInput) {
-    const newMovie = await createMovie(movieInput);
-    setMovies((currentMovies) => [...currentMovies, newMovie]);
+  async function addMovie(movieInput: MovieInput): Promise<boolean> {
+    setMutationError(null);
+    setIsSaving(true);
+
+    try {
+      const newMovie = await createMovie(movieInput);
+      setMovies((currentMovies) => [...currentMovies, newMovie]);
+      return true;
+    } catch {
+      setMutationError("Could not create the movie. Please try again.");
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
   }
 
-  async function editMovie(movieId: Movie["id"], movieInput: MovieInput) {
-    const updatedMovie = await updateMovie(movieId, movieInput);
-    setMovies((currentMovies) =>
-      currentMovies.map((movie) =>
-        movie.id === movieId ? updatedMovie : movie,
-      ),
-    );
+  async function editMovie(
+    movieId: Movie["id"],
+    movieInput: MovieInput,
+  ): Promise<boolean> {
+    setMutationError(null);
+    setIsSaving(true);
+
+    try {
+      const updatedMovie = await updateMovie(movieId, movieInput);
+      setMovies((currentMovies) =>
+        currentMovies.map((movie) =>
+          movie.id === movieId ? updatedMovie : movie,
+        ),
+      );
+      return true;
+    } catch {
+      setMutationError("Could not update the movie. Please try again.");
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
   }
 
-  async function removeMovie(movieId: Movie["id"]) {
-    await deleteMovie(movieId);
-    setMovies((currentMovies) =>
-      currentMovies.filter((movie) => movie.id !== movieId),
-    );
-    setFavoriteIds((currentIds) =>
-      currentIds.filter((id) => id !== movieId),
-    );
+  async function removeMovie(movieId: Movie["id"]): Promise<boolean> {
+    setMutationError(null);
+    setDeletingMovieId(movieId);
+
+    try {
+      await deleteMovie(movieId);
+      setMovies((currentMovies) =>
+        currentMovies.filter((movie) => movie.id !== movieId),
+      );
+      setFavoriteIds((currentIds) =>
+        currentIds.filter((id) => id !== movieId),
+      );
+      return true;
+    } catch {
+      setMutationError("Could not delete the movie. Please try again.");
+      return false;
+    } finally {
+      setDeletingMovieId(null);
+    }
   }
 
   return {
@@ -107,6 +148,9 @@ export function useMovieCatalog() {
     genres,
     isLoading,
     errorMessage,
+    mutationError,
+    isSaving,
+    deletingMovieId,
     search,
     setSearch,
     selectedGenre,

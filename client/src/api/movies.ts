@@ -32,3 +32,7 @@ export async function updateMovie(
 
   return response.json();
 }
+
+export async function deleteMovie(movieId: Movie["id"]): Promise<void> {
+  await fetch(`/api/movies/${movieId}`, { method: "DELETE" });
+}

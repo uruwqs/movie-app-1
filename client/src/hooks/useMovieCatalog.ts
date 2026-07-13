@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { createMovie, getMovies, updateMovie } from "@/api/movies.ts";
+import {
+  createMovie,
+  deleteMovie,
+  getMovies,
+  updateMovie,
+} from "@/api/movies.ts";
 import {
   type Movie,
   type MovieInput,
@@ -86,6 +91,16 @@ export function useMovieCatalog() {
     );
   }
 
+  async function removeMovie(movieId: Movie["id"]) {
+    await deleteMovie(movieId);
+    setMovies((currentMovies) =>
+      currentMovies.filter((movie) => movie.id !== movieId),
+    );
+    setFavoriteIds((currentIds) =>
+      currentIds.filter((id) => id !== movieId),
+    );
+  }
+
   return {
     movies,
     visibleMovies,
@@ -105,5 +120,6 @@ export function useMovieCatalog() {
     toggleFavorite,
     addMovie,
     editMovie,
+    removeMovie,
   };
 }

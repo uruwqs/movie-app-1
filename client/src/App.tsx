@@ -23,6 +23,18 @@ function App() {
     setMovieToEdit(null);
   }
 
+  async function handleMovieDelete(movie: Movie) {
+    const shouldDelete = window.confirm(`Delete "${movie.title}"?`);
+    if (!shouldDelete) {
+      return;
+    }
+
+    await catalog.removeMovie(movie.id);
+    if (movieToEdit?.id === movie.id) {
+      setMovieToEdit(null);
+    }
+  }
+
   const movieCountText =
     catalog.visibleMovies.length === 1
       ? "1 movie"
@@ -96,6 +108,7 @@ function App() {
               favoriteIds={catalog.favoriteIds}
               onToggleFavorite={catalog.toggleFavorite}
               onEdit={setMovieToEdit}
+              onDelete={handleMovieDelete}
             />
           </>
         ) : (

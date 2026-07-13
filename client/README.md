@@ -1,6 +1,6 @@
 # Movie App
 
-A small full-stack movie catalog built with React, TypeScript, and FastAPI. It loads movies from the backend and supports title search, genre filtering, sorting, and favorites.
+A small full-stack movie catalog built with React, TypeScript, and FastAPI. It supports creating, reading, updating, and deleting movies alongside title search, genre filtering, sorting, and favorites.
 
 ## Development
 
@@ -21,6 +21,8 @@ npm run dev
 ```
 
 Open the URL printed by Vite. Requests beginning with `/api` are forwarded to FastAPI during development.
+
+Movie changes are stored in memory and reset when the FastAPI server restarts.
 
 Other available commands:
 

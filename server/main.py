@@ -47,3 +47,16 @@ def create_movie(movie_data: MovieCreate):
 def get_movie(movie_id: int):
     movie_index = find_movie_index(movie_id)
     return movies[movie_index]
+
+
+@app.put("/api/movies/{movie_id}", response_model=Movie)
+def update_movie(movie_id: int, movie_data: MovieCreate):
+    movie_index = find_movie_index(movie_id)
+    current_movie = movies[movie_index]
+    updated_movie = Movie(
+        id=movie_id,
+        poster_url=current_movie.poster_url,
+        **movie_data.model_dump(),
+    )
+    movies[movie_index] = updated_movie
+    return updated_movie

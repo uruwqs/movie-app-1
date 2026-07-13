@@ -8,4 +8,6 @@ export type Movie = {
   rating: number;
 };
 
+export type MovieInput = Omit<Movie, "id" | "poster_url">;
+
 export type MovieSortValue = "default" | "rating" | "releaseYear";

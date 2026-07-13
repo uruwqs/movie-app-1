@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { getMovies } from "@/api/movies.ts";
-import { type Movie, type MovieSortValue } from "@/types/movie.ts";
+import { createMovie, getMovies } from "@/api/movies.ts";
+import {
+  type Movie,
+  type MovieInput,
+  type MovieSortValue,
+} from "@/types/movie.ts";
 
 const allGenres = "All";
 
@@ -68,6 +72,11 @@ export function useMovieCatalog() {
     );
   }
 
+  async function addMovie(movieInput: MovieInput) {
+    const newMovie = await createMovie(movieInput);
+    setMovies((currentMovies) => [...currentMovies, newMovie]);
+  }
+
   return {
     movies,
     visibleMovies,
@@ -85,5 +94,6 @@ export function useMovieCatalog() {
     setFavoritesOnly,
     clearFilters,
     toggleFavorite,
+    addMovie,
   };
 }

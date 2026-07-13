@@ -1,4 +1,4 @@
-import { type Movie } from "@/types/movie.ts";
+import { type Movie, type MovieInput } from "@/types/movie.ts";
 
 export async function getMovies(): Promise<Movie[]> {
   const response = await fetch("/api/movies");
@@ -6,6 +6,16 @@ export async function getMovies(): Promise<Movie[]> {
   if (!response.ok) {
     throw new Error("Failed to load movies");
   }
+
+  return response.json();
+}
+
+export async function createMovie(movie: MovieInput): Promise<Movie> {
+  const response = await fetch("/api/movies", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(movie),
+  });
 
   return response.json();
 }

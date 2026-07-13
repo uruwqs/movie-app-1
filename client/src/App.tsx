@@ -1,5 +1,6 @@
 import { EmptyState } from "@/components/EmptyState.tsx";
 import { MovieFavoritesFilter } from "@/components/MovieFavoritesFilter.tsx";
+import { MovieForm } from "@/components/MovieForm.tsx";
 import { MovieGenreFilter } from "@/components/MovieGenreFilter.tsx";
 import { MovieList } from "@/components/MovieList.tsx";
 import { MovieSearch } from "@/components/MovieSearch.tsx";
@@ -34,7 +35,9 @@ function App() {
           and data from a FastAPI backend.
         </p>
 
-        <div className="mt-10 rounded-2xl border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/20 backdrop-blur sm:p-5">
+        <MovieForm onSubmit={catalog.addMovie} />
+
+        <div className="mt-6 rounded-2xl border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/20 backdrop-blur sm:p-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_220px_220px]">
             <MovieSearch value={catalog.search} onChange={catalog.setSearch} />
             <MovieGenreFilter

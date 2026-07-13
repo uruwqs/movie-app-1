@@ -31,7 +31,7 @@ function App() {
         </h1>
         <p className="mt-4 max-w-2xl leading-7 text-slate-300">
           A small React project for learning components, props, lists, state,
-          and mock API data.
+          and data from a FastAPI backend.
         </p>
 
         <div className="mt-10 rounded-2xl border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/20 backdrop-blur sm:p-5">

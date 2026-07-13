@@ -1,10 +1,7 @@
-import { movies } from "@/data/movies.ts";
 import { type Movie } from "@/types/movie.ts";
 
-export function getMovies(): Promise<Movie[]> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(movies);
-    }, 500);
-  });
+export async function getMovies(): Promise<Movie[]> {
+  const response = await fetch("/api/movies");
+
+  return response.json();
 }

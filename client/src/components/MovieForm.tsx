@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from "react";
-import { type MovieInput } from "@/types/movie.ts";
+import { useEffect, useState, type FormEvent } from "react";
+import { type Movie, type MovieInput } from "@/types/movie.ts";
 
 const emptyMovie: MovieInput = {
   title: "",
@@ -10,11 +10,31 @@ const emptyMovie: MovieInput = {
 };
 
 type MovieFormProps = {
+  movieToEdit: Movie | null;
   onSubmit: (movie: MovieInput) => Promise<void>;
+  onCancel: () => void;
 };
 
-export function MovieForm({ onSubmit }: MovieFormProps) {
+export function MovieForm({
+  movieToEdit,
+  onSubmit,
+  onCancel,
+}: MovieFormProps) {
   const [movie, setMovie] = useState<MovieInput>(emptyMovie);
+
+  useEffect(() => {
+    if (movieToEdit) {
+      setMovie({
+        title: movieToEdit.title,
+        genre: movieToEdit.genre,
+        release_year: movieToEdit.release_year,
+        description: movieToEdit.description,
+        rating: movieToEdit.rating,
+      });
+    } else {
+      setMovie(emptyMovie);
+    }
+  }, [movieToEdit]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,9 +47,13 @@ export function MovieForm({ onSubmit }: MovieFormProps) {
       className="mt-10 rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-2xl shadow-black/20 sm:p-6"
       onSubmit={handleSubmit}
     >
-      <h2 className="text-2xl font-bold">Add a movie</h2>
+      <h2 className="text-2xl font-bold">
+        {movieToEdit ? "Edit movie" : "Add a movie"}
+      </h2>
       <p className="mt-2 text-sm text-slate-400">
-        New movies use the default poster until image uploads are added later.
+        {movieToEdit
+          ? "Update the movie details, then save your changes."
+          : "New movies use the default poster until image uploads are added later."}
       </p>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -111,12 +135,23 @@ export function MovieForm({ onSubmit }: MovieFormProps) {
         </label>
       </div>
 
-      <button
-        className="mt-6 rounded-lg bg-sky-400 px-5 py-3 font-semibold text-slate-950 hover:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
-        type="submit"
-      >
-        Add movie
-      </button>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <button
+          className="rounded-lg bg-sky-400 px-5 py-3 font-semibold text-slate-950 hover:bg-sky-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
+          type="submit"
+        >
+          {movieToEdit ? "Save changes" : "Add movie"}
+        </button>
+        {movieToEdit && (
+          <button
+            className="rounded-lg border border-slate-600 px-5 py-3 font-semibold text-slate-200 hover:border-slate-400 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300"
+            type="button"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }

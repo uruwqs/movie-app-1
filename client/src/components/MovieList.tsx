@@ -5,12 +5,14 @@ type MovieListProps = {
   movies: readonly Movie[];
   favoriteIds: readonly Movie["id"][];
   onToggleFavorite: (movieId: Movie["id"]) => void;
+  onEdit: (movie: Movie) => void;
 };
 
 export function MovieList({
   movies,
   favoriteIds,
   onToggleFavorite,
+  onEdit,
 }: MovieListProps) {
   return (
     <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
@@ -20,6 +22,7 @@ export function MovieList({
           movie={movie}
           isFavorite={favoriteIds.includes(movie.id)}
           onToggleFavorite={onToggleFavorite}
+          onEdit={onEdit}
         />
       ))}
     </div>

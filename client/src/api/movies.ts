@@ -19,3 +19,16 @@ export async function createMovie(movie: MovieInput): Promise<Movie> {
 
   return response.json();
 }
+
+export async function updateMovie(
+  movieId: Movie["id"],
+  movie: MovieInput,
+): Promise<Movie> {
+  const response = await fetch(`/api/movies/${movieId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(movie),
+  });
+
+  return response.json();
+}

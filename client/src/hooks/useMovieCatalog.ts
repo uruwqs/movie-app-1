@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createMovie, getMovies } from "@/api/movies.ts";
+import { createMovie, getMovies, updateMovie } from "@/api/movies.ts";
 import {
   type Movie,
   type MovieInput,
@@ -77,6 +77,15 @@ export function useMovieCatalog() {
     setMovies((currentMovies) => [...currentMovies, newMovie]);
   }
 
+  async function editMovie(movieId: Movie["id"], movieInput: MovieInput) {
+    const updatedMovie = await updateMovie(movieId, movieInput);
+    setMovies((currentMovies) =>
+      currentMovies.map((movie) =>
+        movie.id === movieId ? updatedMovie : movie,
+      ),
+    );
+  }
+
   return {
     movies,
     visibleMovies,
@@ -95,5 +104,6 @@ export function useMovieCatalog() {
     clearFilters,
     toggleFavorite,
     addMovie,
+    editMovie,
   };
 }

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { EmptyState } from "@/components/EmptyState.tsx";
 import { MovieFavoritesFilter } from "@/components/MovieFavoritesFilter.tsx";
 import { MovieForm } from "@/components/MovieForm.tsx";
@@ -6,9 +7,21 @@ import { MovieList } from "@/components/MovieList.tsx";
 import { MovieSearch } from "@/components/MovieSearch.tsx";
 import { MovieSort } from "@/components/MovieSort.tsx";
 import { useMovieCatalog } from "@/hooks/useMovieCatalog.ts";
+import { type Movie, type MovieInput } from "@/types/movie.ts";
 
 function App() {
   const catalog = useMovieCatalog();
+  const [movieToEdit, setMovieToEdit] = useState<Movie | null>(null);
+
+  async function handleMovieSubmit(movieInput: MovieInput) {
+    if (movieToEdit) {
+      await catalog.editMovie(movieToEdit.id, movieInput);
+    } else {
+      await catalog.addMovie(movieInput);
+    }
+
+    setMovieToEdit(null);
+  }
 
   const movieCountText =
     catalog.visibleMovies.length === 1
@@ -35,7 +48,11 @@ function App() {
           and data from a FastAPI backend.
         </p>
 
-        <MovieForm onSubmit={catalog.addMovie} />
+        <MovieForm
+          movieToEdit={movieToEdit}
+          onSubmit={handleMovieSubmit}
+          onCancel={() => setMovieToEdit(null)}
+        />
 
         <div className="mt-6 rounded-2xl border border-white/10 bg-slate-900/70 p-4 shadow-2xl shadow-black/20 backdrop-blur sm:p-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_220px_220px]">
@@ -78,6 +95,7 @@ function App() {
               movies={catalog.visibleMovies}
               favoriteIds={catalog.favoriteIds}
               onToggleFavorite={catalog.toggleFavorite}
+              onEdit={setMovieToEdit}
             />
           </>
         ) : (

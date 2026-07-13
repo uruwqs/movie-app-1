@@ -1,5 +1,7 @@
 from schemas import Movie
 
+DEFAULT_POSTER_URL = "/posters/movie-placeholder.svg"
+
 
 movies: list[Movie] = [
     Movie(

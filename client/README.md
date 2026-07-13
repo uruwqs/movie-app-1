@@ -1,13 +1,26 @@
 # Movie App
 
-A small movie catalog built with React and TypeScript. It loads mock movie data and supports title search, genre filtering, sorting, and favorites.
+A small full-stack movie catalog built with React, TypeScript, and FastAPI. It loads movies from the backend and supports title search, genre filtering, sorting, and favorites.
 
 ## Development
 
+Start the FastAPI backend from the repository root:
+
 ```bash
+cd server
+uv sync
+uv run fastapi dev
+```
+
+Then start the React client in another terminal:
+
+```bash
+cd client
 npm install
 npm run dev
 ```
+
+Open the URL printed by Vite. Requests beginning with `/api` are forwarded to FastAPI during development.
 
 Other available commands:
 
@@ -21,9 +34,8 @@ npm run preview
 
 ```text
 src/
-  api/          Mock API boundary
+  api/          FastAPI requests
   components/   Presentational movie catalog components
-  data/         Mock movie records
   hooks/        Catalog state and derived behavior
   types/        Shared domain types
   App.tsx       Page composition
@@ -36,3 +48,4 @@ src/
 - Vite
 - Tailwind CSS
 - Oxlint
+- FastAPI

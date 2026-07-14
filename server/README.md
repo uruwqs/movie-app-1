@@ -11,9 +11,16 @@ uv sync
 uv run fastapi dev
 ```
 
+To add the six sample movies to an empty database, run:
+
+```bash
+uv run python seed.py
+```
+
 The API runs at <http://127.0.0.1:8000>. Interactive API documentation is available at <http://127.0.0.1:8000/docs>.
 
-Movie changes are stored in memory and reset whenever the server restarts.
+Movie changes are stored in a local SQLite database and persist across server
+restarts. The database file and tables are created automatically.
 
 ## API routes
 
@@ -28,7 +35,11 @@ Movie changes are stored in memory and reset whenever the server restarts.
 ## Project structure
 
 ```text
+config.py    Environment-based application settings
+database.py  Async SQLAlchemy engine and sessions
+models.py    Movie database model
 main.py      FastAPI application and routes
-schemas.py   Movie response model
-data.py      In-memory movie records
+schemas.py   Movie request and response models
+data.py      Sample movie records
+seed.py      Optional sample data command
 ```

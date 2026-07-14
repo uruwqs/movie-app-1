@@ -12,6 +12,9 @@ uv sync
 uv run fastapi dev
 ```
 
+To add the six sample movies to an empty database, run
+`uv run python seed.py` from the `server` directory.
+
 Then start the React client in another terminal:
 
 ```bash
@@ -22,7 +25,8 @@ npm run dev
 
 Open the URL printed by Vite. Requests beginning with `/api` are forwarded to FastAPI during development.
 
-Movie changes are stored in memory and reset when the FastAPI server restarts.
+Movie changes are stored in a local SQLite database and persist when the
+FastAPI server restarts.
 
 Other available commands:
 

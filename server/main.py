@@ -1,15 +1,34 @@
-from fastapi import FastAPI, HTTPException, status
+from contextlib import asynccontextmanager
+from typing import Annotated
 
-from data import DEFAULT_POSTER_URL, movies
+from fastapi import Depends, FastAPI, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+import models
+from data import DEFAULT_POSTER_URL
+from database import Base, engine, get_db
 from schemas import Movie, MovieCreate
 
-app = FastAPI(title="Movie API")
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+
+    try:
+        yield
+    finally:
+        await engine.dispose()
 
 
-def find_movie_index(movie_id: int) -> int:
-    for index, movie in enumerate(movies):
-        if movie.id == movie_id:
-            return index
+app = FastAPI(title="Movie API", lifespan=lifespan)
+
+
+async def find_movie(movie_id: int, db: AsyncSession) -> models.Movie:
+    movie = await db.get(models.Movie, movie_id)
+    if movie:
+        return movie
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -18,13 +37,14 @@ def find_movie_index(movie_id: int) -> int:
 
 
 @app.get("/")
-def home():
+async def home():
     return {"message": "Welcome to the Movie API!"}
 
 
 @app.get("/api/movies", response_model=list[Movie])
-def get_movies():
-    return movies
+async def get_movies(db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.scalars(select(models.Movie).order_by(models.Movie.id))
+    return result.all()
 
 
 @app.post(
@@ -32,40 +52,51 @@ def get_movies():
     response_model=Movie,
     status_code=status.HTTP_201_CREATED,
 )
-def create_movie(movie_data: MovieCreate):
-    new_id = max(movie.id for movie in movies) + 1 if movies else 1
-    new_movie = Movie(
-        id=new_id,
+async def create_movie(
+    movie_data: MovieCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    new_movie = models.Movie(
         poster_url=DEFAULT_POSTER_URL,
         **movie_data.model_dump(),
     )
-    movies.append(new_movie)
+    db.add(new_movie)
+    await db.commit()
+    await db.refresh(new_movie)
     return new_movie
 
 
 @app.get("/api/movies/{movie_id}", response_model=Movie)
-def get_movie(movie_id: int):
-    movie_index = find_movie_index(movie_id)
-    return movies[movie_index]
+async def get_movie(
+    movie_id: int,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    return await find_movie(movie_id, db)
 
 
 @app.put("/api/movies/{movie_id}", response_model=Movie)
-def update_movie(movie_id: int, movie_data: MovieCreate):
-    movie_index = find_movie_index(movie_id)
-    current_movie = movies[movie_index]
-    updated_movie = Movie(
-        id=movie_id,
-        poster_url=current_movie.poster_url,
-        **movie_data.model_dump(),
-    )
-    movies[movie_index] = updated_movie
-    return updated_movie
+async def update_movie(
+    movie_id: int,
+    movie_data: MovieCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    movie = await find_movie(movie_id, db)
+    for field, value in movie_data.model_dump().items():
+        setattr(movie, field, value)
+
+    await db.commit()
+    await db.refresh(movie)
+    return movie
 
 
 @app.delete(
     "/api/movies/{movie_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_movie(movie_id: int) -> None:
-    movie_index = find_movie_index(movie_id)
-    movies.pop(movie_index)
+async def delete_movie(
+    movie_id: int,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> None:
+    movie = await find_movie(movie_id, db)
+    await db.delete(movie)
+    await db.commit()

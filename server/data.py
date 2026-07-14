@@ -1,10 +1,8 @@
-from schemas import Movie
-
 DEFAULT_POSTER_URL = "/posters/movie-placeholder.svg"
 
 
-movies: list[Movie] = [
-    Movie(
+SAMPLE_MOVIES = [
+    dict(
         id=1,
         title="Starlight Summer",
         poster_url="/posters/starlight-summer.svg",
@@ -16,7 +14,7 @@ movies: list[Movie] = [
             "they will never forget."
         ),
     ),
-    Movie(
+    dict(
         id=2,
         title="City of Echoes",
         poster_url="/posters/city-of-echoes.svg",
@@ -28,7 +26,7 @@ movies: list[Movie] = [
             "hidden stories."
         ),
     ),
-    Movie(
+    dict(
         id=3,
         title="Ocean Notes",
         poster_url="/posters/ocean-notes.svg",
@@ -40,7 +38,7 @@ movies: list[Movie] = [
             "music shop by the sea."
         ),
     ),
-    Movie(
+    dict(
         id=4,
         title="Pixel Hearts",
         poster_url="/posters/pixel-hearts.svg",
@@ -52,7 +50,7 @@ movies: list[Movie] = [
             "game goes viral."
         ),
     ),
-    Movie(
+    dict(
         id=5,
         title="Moonlit Code",
         poster_url="/posters/moonlit-code.svg",
@@ -60,11 +58,10 @@ movies: list[Movie] = [
         genre="Sci-Fi",
         rating=8.9,
         description=(
-            "A student builds a robot that can read old messages hidden in "
-            "moonlight."
+            "A student builds a robot that can read old messages hidden in moonlight."
         ),
     ),
-    Movie(
+    dict(
         id=6,
         title="The Last Train",
         poster_url="/posters/the-last-train.svg",

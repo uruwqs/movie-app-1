@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class MovieBase(BaseModel):
@@ -14,5 +14,7 @@ class MovieCreate(MovieBase):
 
 
 class Movie(MovieBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     poster_url: str

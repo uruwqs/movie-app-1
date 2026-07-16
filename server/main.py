@@ -7,11 +7,20 @@ from sqlalchemy.orm import Session
 
 import database
 import schemas
+import threading
+import parcer
+from recommendation import get_recommendation
 
 # Создаем таблицы в SQLite
 database.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="Atrium Comfort API")
+
+
+@app.on_event("startup")
+def startup_event():
+    parser_thread = threading.Thread(target=parcer.start_parser, daemon=True)
+    parser_thread.start()
 
 
 # ---------------------------------------------------------
@@ -88,6 +97,8 @@ def get_reading_by_id(id: int, db: Session = Depends(database.get_db)):
 # ---------------------------------------------------------
 # 3. GET /api/summary
 # ---------------------------------------------------------
+
+
 @app.get("/api/summary", response_model=schemas.SummaryResponse)
 def get_summary(
     selected_date: Optional[date] = Query(None),
@@ -198,6 +209,57 @@ def get_summary(
                 "☀️ На улице очень жарко. "
                 "Рекомендуется пить больше воды и избегать длительного пребывания на солнце."
             )
+    # ---------------------------------------------------------
+    # Drink Recommendation
+    # ---------------------------------------------------------
+
+    drink = None
+
+    if latest_atrium is not None:
+        recommendation = get_recommendation(latest_atrium.temperature)
+
+        if recommendation:
+            drink = schemas.DrinkRecommendation(
+                cafe=recommendation["cafe"],
+                name=recommendation["name"],
+                price=recommendation["price"],
+                reason=recommendation["reason"],
+            )
+
+            # ---------------------------------------------------------
+    # Best Study Day Recommendation
+    # ---------------------------------------------------------
+
+    best_study = None
+
+    study_days = (
+        db.query(
+            func.date(database.ReadingDB.measured_at).label("day"),
+            func.avg(database.ReadingDB.temperature).label("avg_temp"),
+        )
+        .filter(database.ReadingDB.location == "atrium")
+        .group_by(func.date(database.ReadingDB.measured_at))
+        .all()
+    )
+
+    if study_days:
+        best = min(study_days, key=lambda x: abs(x.avg_temp - 22))
+
+        noise_record = (
+            db.query(database.ReadingDB)
+            .filter(
+                database.ReadingDB.location == "atrium",
+                func.date(database.ReadingDB.measured_at) == best.day,
+            )
+            .first()
+        )
+
+        best_study = schemas.StudyRecommendation(
+            date=str(best.day),
+            average_temperature=round(best.avg_temp, 1),
+            noise=noise_record.noise if noise_record else "Unknown",
+            reason="Наиболее комфортные условия для длительной учебы.",
+        )
 
     return schemas.SummaryResponse(
         latest_atrium=latest_atrium,
@@ -209,6 +271,8 @@ def get_summary(
             avg_temp=avg_t,
         ),
         analytical_insight=insight,
+        best_study_time=best_study,
+        drink_recommendation=drink,
         health_warning=health_warning,
     )
 

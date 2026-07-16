@@ -33,12 +33,28 @@ class Stats(BaseModel):
     avg_temp: float
 
 
+class DrinkRecommendation(BaseModel):
+    cafe: str
+    name: str
+    price: int
+    reason: str
+
+
+class StudyRecommendation(BaseModel):
+    date: str
+    average_temperature: float
+    noise: str
+    reason: str
+
+
 class SummaryResponse(BaseModel):
     latest_atrium: Optional[ReadingShort] = None
     latest_outside: Optional[ReadingShort] = None
     status_text: str
     stats_today: Stats
     health_warning: Optional[str] = None
+    drink_recommendation: Optional[DrinkRecommendation] = None
+    best_study_time: Optional[StudyRecommendation] = None
     analytical_insight: str
 
 

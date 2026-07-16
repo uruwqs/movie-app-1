@@ -33,18 +33,12 @@ class Stats(BaseModel):
     avg_temp: float
 
 
-class StudyRecommendation(BaseModel):
-    time: str
-    reason: str
-
-
 class SummaryResponse(BaseModel):
     latest_atrium: Optional[ReadingShort] = None
     latest_outside: Optional[ReadingShort] = None
     status_text: str
     stats_today: Stats
     health_warning: Optional[str] = None
-    best_study_time: StudyRecommendation
     analytical_insight: str
 
 

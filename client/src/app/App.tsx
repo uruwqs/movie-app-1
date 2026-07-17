@@ -27,9 +27,7 @@ import {
   Wind,
 } from "lucide-react";
 // @ts-ignore - image imports
-import goldenHourImg from "@/imports/-7.jpg";
-// @ts-ignore - image imports
-import quietFocusImg from "@/imports/-8.jpg";
+import atriumLogo from "@/imports/logo.png";
 // @ts-ignore - image imports
 import lateEveningImg from "@/imports/late-evening.jpg";
 // @ts-ignore - image imports
@@ -78,7 +76,7 @@ const studyWindows: StudyWindow[] = [
     score: 96,
     accent: "#facc15",
     badge: "Golden Hour",
-    image: goldenHourImg,
+    image: atriumLogo,
   },
   {
     title: "Quiet Focus",
@@ -86,7 +84,7 @@ const studyWindows: StudyWindow[] = [
     time: "09:00 – 11:00",
     score: 88,
     accent: "#4D7EBD",
-    image: quietFocusImg,
+    image: atriumLogo,
   },
   {
     title: "Late Evening",
@@ -94,7 +92,7 @@ const studyWindows: StudyWindow[] = [
     time: "20:00 – 22:00",
     score: 82,
     accent: "#22c55e",
-    image: lateEveningImg,
+    image: atriumLogo,
   },
 ];
 

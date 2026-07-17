@@ -29,7 +29,6 @@ import {
 // @ts-ignore - image imports
 import atriumLogo from "@/imports/logo.png";
 // @ts-ignore - image imports
-import lateEveningImg from "@/imports/late-evening.jpg";
 // @ts-ignore - image imports
 import atriumLogo from "@/imports/logo.png";
 

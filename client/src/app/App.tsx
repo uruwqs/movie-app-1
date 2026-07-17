@@ -27,7 +27,6 @@ import {
   Wind,
 } from "lucide-react";
 // @ts-ignore - image imports
-import atriumLogo from "@/imports/logo.png";
 // @ts-ignore - image imports
 // @ts-ignore - image imports
 import atriumLogo from "@/imports/logo.png";

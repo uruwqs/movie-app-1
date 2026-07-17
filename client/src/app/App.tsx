@@ -27,9 +27,9 @@ import {
   Wind,
 } from "lucide-react";
 // @ts-ignore - image imports
-import goldenHourImg from "@/imports/ -7.jpg";
+import goldenHourImg from "@/imports/-7.jpg";
 // @ts-ignore - image imports
-import quietFocusImg from "@/imports/ -8.jpg";
+import quietFocusImg from "@/imports/-8.jpg";
 // @ts-ignore - image imports
 import lateEveningImg from "@/imports/late-evening.jpg";
 // @ts-ignore - image imports
@@ -1090,7 +1090,7 @@ export default function App() {
                 <div className="rounded-[1.25rem] border border-slate-200 bg-white/70 p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-slate-900">
-                      Flow
+                      Flows
                     </span>
                     <span className="text-sm font-semibold text-emerald-600">
                       Stable

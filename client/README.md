@@ -1,57 +1,11 @@
-# Movie App
 
-A small full-stack movie catalog built with React, TypeScript, and FastAPI. It supports creating, reading, updating, and deleting movies alongside title search, genre filtering, sorting, and favorites.
+  # Atrium website
 
-## Development
+  This is a code bundle for Atrium website. The original project is available at https://www.figma.com/design/jcSPcCn5mz6oKaG6dqnwpM/Atrium-website.
 
-Start the FastAPI backend from the repository root:
+  ## Running the code
 
-```bash
-cd server
-uv sync
-uv run fastapi dev
-```
+  Run `npm i` to install the dependencies.
 
-To add the six sample movies to an empty database, run
-`uv run python seed.py` from the `server` directory.
-
-Then start the React client in another terminal:
-
-```bash
-cd client
-npm install
-npm run dev
-```
-
-Open the URL printed by Vite. Requests beginning with `/api` are forwarded to FastAPI during development.
-
-Movie changes are stored in a local SQLite database and persist when the
-FastAPI server restarts.
-
-Other available commands:
-
-```bash
-npm run lint
-npm run build
-npm run preview
-```
-
-## Project structure
-
-```text
-src/
-  api/          FastAPI requests
-  components/   Presentational movie catalog components
-  hooks/        Catalog state and derived behavior
-  types/        Shared domain types
-  App.tsx       Page composition
-```
-
-## Built with
-
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Oxlint
-- FastAPI
+  Run `npm run dev` to start the development server.
+  

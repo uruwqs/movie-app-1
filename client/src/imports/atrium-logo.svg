@@ -1,0 +1,7 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main star shape -->
+  <path d="M 100,20 L 130,80 L 195,80 L 145,130 L 170,190 L 100,145 L 30,190 L 55,130 L 5,80 L 70,80 Z" fill="#4D7EBD"/>
+  
+  <!-- ATRIUM text overlaid on star -->
+  <text x="100" y="115" font-family="SF Pro Display, -apple-system, sans-serif" font-size="32" font-weight="700" text-anchor="middle" fill="#facc15" letter-spacing="1.5" dominant-baseline="middle">ATRIUM</text>
+</svg>

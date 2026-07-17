@@ -11,10 +11,22 @@ import threading
 import parcer
 from recommendation import get_recommendation
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # Создаем таблицы в SQLite
 database.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="Atrium Comfort API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "https://movie-app-1-oxsnl4n96-piupiu1.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")
